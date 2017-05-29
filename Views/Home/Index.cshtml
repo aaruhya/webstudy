@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model IEnumerable<WebApplication1mvc.Models.Product>
+
+<div class="jumbotron">
+    <h1>Product Catalog</h1>
+    <p class="lead">Our latest list of products</p>
+</div>
+
+<h3>@TempData["error"]</h3>
+<div class="row">
+    @using (Html.BeginForm("Add", "Carts", FormMethod.Post, new { id = "productForm" })) 
+    {
+    foreach (var product in Model)
+    {
+        <div class="col-md-4 product" > 
+          <h1> @product.DisplayName</h1>
+            <div style="height:50px;width:50px">Picture</div>
+           <p>@product.Price</p>
+            
+            <div>
+                <a class="btn-primary" id="GoToCart" onclick="AddToCart('@product.ID')">Add to Cart</a>
+            </div>
+        </div>
+
+        }
+       
+    <input type="hidden" id="ProductID" name="ProductID" />
+    }
+
+</div>
+<script>
+    function AddToCart(productID) {
+        var form = document.forms[0];
+        
+        document.getElementById("ProductID").value = productID;
+        document.getElementById("ProductID").setAttribute("value", productID);
+        console.log(document.getElementById("ProductID").value);
+        form.submit();
+    }
+</script>

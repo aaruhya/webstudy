@@ -1,0 +1,78 @@
+﻿@model WebApplication1mvc.Models.Cart
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Cart</h2>
+
+<h3>You have the following items in your cart </h3>
+<h4 id="error"></h4>
+<div class="row">
+    <div class="col-md-8">
+    @{ 
+        int count = 0;
+        foreach (var item in Model.Contents)
+        {
+            count++;
+            var divID = "div" + count;
+            
+            <div class="col-md-8 product" id="@divID">
+                <h1> @item.product.DisplayName</h1>
+                <div style="height:50px;width:50px">Picture</div>
+                <p>@item.product.Price</p>
+                <p>@item.Quantity</p>
+                <div>
+                    <button class="btn-danger" id="remove" onclick="RemoveProduct('@item.product.ID','@divID')">Remove</button>
+                </div>
+            </div>
+        }
+
+        <div class="row col-md-8" style="margin-top:10px">
+            <h3>The total amount is $ @Model.Amount </h3>
+        </div>
+    }
+   </div>
+    
+</div>
+
+
+
+<div class="row col-md-8" style="margin-top:10px">
+    <button class="btn-primary" id="Shopping">@Html.ActionLink("Continue Shopping", "Index", "Home") shopping</button>
+    <button class="btn-info" id="Checkout" onclick="checkout('@Model.CartID')">Check Out</button>
+</div>
+
+<script src="~/Scripts/PageScripts/cart.js"></script>
+<script>
+    function RemoveProduct(pid, did) {
+        console.log(did);
+        // send post request to server to remove item from cart
+        $.ajax({
+            method: "POST",
+            url: "/Carts/Remove",
+            data: {ProductID: pid}
+        })
+            .done(function (msg) {
+               // document.getElementById(did).remove();
+            })
+        .fail(function (msg) {
+            document.getElementById("error").innerHTML = "Error removing item";
+        });
+    }
+
+    function checkout(cartID)
+    {
+        $.ajax({
+            method: "GET",
+            url: "/Carts/Payment",
+            data: {ProductID: cartID}
+        })
+            .done(function (result) {
+                // document.getElementById(did).remove();
+            })
+        .fail(function (result) {
+            document.getElementById("error").innerHTML = "Error removing item";
+        });
+    }
+</script>

@@ -1,0 +1,42 @@
+﻿@model WebApplication1mvc.Models.Cart
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+   <h2>Cart</h2>
+
+    <h3>You have the following items in your cart </h3>
+
+        <div class="row">
+            @{ double amount = 0;
+                int count = 0;
+                foreach (var item in Model.Contents)
+                {
+                    count++;
+                    var divID = "div" + count;
+                    amount = (amount == 0) ? (item.product.Price * item.Quantity) : (amount + item.product.Price * item.Quantity);
+                    <div class="col-md-8 product">
+                        <h1> @item.product.DisplayName</h1>
+                        <div style="height:50px;width:50px">Picture</div>
+                        <p>@item.product.Price</p>
+                        <p>@item.Quantity</p>
+                        <div>
+                            @*<button class="btn-danger" id="remove" onclick="RemoveProduct('@item.product.ID','@divID')">Remove</button>*@
+                        </div>
+                    </div>
+                }
+
+                <div class="row col-md-8" style="margin-top:10px">The total amount is $ @amount</div>
+            }
+        </div>
+
+        
+
+        <div class="row col-md-8" style="margin-top:10px">
+            <button class="btn-primary" id="Shopping">Continue shopping</button>
+            <button class="btn-info" id="Checkout">Check out</button>
+        </div>
+
+
+
